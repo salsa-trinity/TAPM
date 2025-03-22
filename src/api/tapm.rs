@@ -1,11 +1,9 @@
-pub fn hash(seed: &String) -> String {
+pub fn hash(seed: &str, salt: &str) -> String {
     // argon2 bcrybt scrypt pbkdf2 sha256
-    let mut password = String::new();
-    let mut salt = String::new();
-    std::io::stdin().read_line(&mut password).unwrap();
-    std::io::stdin().read_line(&mut salt).unwrap(); // TODO: add salt when using a username
     let config = argon2::Config::default();
-    let hash = argon2::hash_encoded(password.as_bytes(), salt.as_bytes(), &config).unwrap();
+    let hash = argon2::hash_encoded(seed.as_bytes(), salt.as_bytes(), &config).unwrap();
+    let hash = &hash[31..];
     println!("hash: {}", hash);
-    hash
+    println!("numb: {}", crate::api::filters::numbers(&hash));
+    hash.to_string()
 }
