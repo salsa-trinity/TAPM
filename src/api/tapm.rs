@@ -1,9 +1,10 @@
 pub fn hash(seed: &str, salt: &str) -> String {
-    // argon2 bcrybt scrypt pbkdf2 sha256
-    let config = argon2::Config::default();
-    let hash = argon2::hash_encoded(seed.as_bytes(), salt.as_bytes(), &config).unwrap();
-    let hash = &hash[31..];
+    // make a unique number per user for how many times it
+    // recursively sha256, and therefore get the benefits of
+    // bcrypt's timely function, while also providing extra security
+    // for people how dont know that users sha number
+
+    let hash = sha256::digest(seed.to_owned() + salt).to_string();
     println!("hash: {}", hash);
-    println!("numb: {}", crate::api::filters::numbers(&hash));
-    hash.to_string()
+    hash
 }
